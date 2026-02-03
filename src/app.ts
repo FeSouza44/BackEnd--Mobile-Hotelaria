@@ -1,10 +1,11 @@
 //import { Request, Response, NextFunction } from "express";
 import express from "express";
 import router from "./routes/task";
+import handleRouter from "./routes/router";
 
 const app = express();
 app.use(express.json());
-app.use("/task", router);
+app.use(handleRouter);
 
 export default app;
 
