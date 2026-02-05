@@ -2,7 +2,7 @@ const URL_LOGIN:string = "http://localhost:3000/api/login"
 
 const novo_login = {
   email: "a@gmail.com",
-  senha: "123"
+  senha: "senha"
 }
 
 test("POST: api/login = 201(Create task)", async() => {
@@ -12,5 +12,6 @@ test("POST: api/login = 201(Create task)", async() => {
         body: JSON.stringify(novo_login)
     }) 
     expect(res.status).toBe(201)
-    
+    const json = await res.json()
+    console.log(json)
 })

@@ -1,5 +1,7 @@
-import e, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import loginRepositories from "../repositories/loginRepositories";
+import { validatePassword } from "../utils/senha";
+import { createJWT } from "../utils/jwt";
 
 async function createLogin(req:Request, res:Response, next:NextFunction){
   const{email, senha} = req.body
@@ -14,9 +16,14 @@ async function createLogin(req:Request, res:Response, next:NextFunction){
     const result = await loginRepositories.validateEmail(email);
     if(!result) {throw new Error()}
 
-    console.log(result.email)
-    console.log(result.senha)
-    return res.sendStatus(201)
+    const isValidPassword = await validatePassword(senha, result.senha);
+    if(!isValidPassword){throw new Error()}
+
+    const {senha: _senha, ...usuario} = result;
+    
+    const token = createJWT(usuario);
+
+    return res.status(201).json({token});
 
   } catch(error){
     console.log(error);

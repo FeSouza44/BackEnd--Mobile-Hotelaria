@@ -1,6 +1,8 @@
 import {pool} from '../database/database';
+import { Login } from '../models/login';
+import { RowDataPacket } from 'mysql2';
 
-async function validateEmail(email: string) {
+async function validateEmail(email: string): Promise<Login|null> {
     const sql = `SELECT
                 clientes.id,
                 clientes.nome,
@@ -12,7 +14,7 @@ async function validateEmail(email: string) {
                 ON cargos.id = clientes.fk_cargo
                 WHERE clientes.email = ?
                 `
-                const [rows] = await pool.query(sql, [email]);
+                const [rows] = await pool.query<Login[]>(sql, [email]);
                 return rows.length ? rows[0] : null;    
 }
 
