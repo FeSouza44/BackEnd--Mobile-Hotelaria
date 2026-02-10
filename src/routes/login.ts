@@ -1,10 +1,9 @@
 import { Router } from "express";
-import loginController from "../controllers/loginController";
-import clienteController from "../controllers/clienteController";
+import loginController from "../controllers/clienteController"
 
-const routeLogin = Router();
+const rotaLogin = Router();
 
-routeLogin.post("/", loginController.createLogin);
-routeLogin.post("/register", clienteController.createClient);
+rotaLogin.post("/", loginController.loginCliente)
+rotaLogin.post("/cadastro", loginController.cadastroCliente)
 
-export default routeLogin; 
+export default rotaLogin;
