@@ -2,13 +2,17 @@ import { Router } from "express";
 import rotaLogin from "./login";
 import { createJWT } from "../utils/jwt";
 import { middleware } from "./jwtMiddleware";
+import routeRoom from "./quartos";
+import routeReserva from "./reserva";
 
 const handlerRouter = Router();
 
 // rotas publicas
+handlerRouter.use("/api/client/", rotaLogin);
+handlerRouter.use("/api/room", routeRoom)
 
-handlerRouter.use("/api/login", rotaLogin);
 
+handlerRouter.use("/api/reserva",routeReserva)
 
 handlerRouter.use("/jwt", (req, res)=>{
     const payload = {

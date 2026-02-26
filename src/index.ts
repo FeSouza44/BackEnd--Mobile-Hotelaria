@@ -1,9 +1,5 @@
-import { parse } from "path";
 import app from "./app";
-import dotenv from "dotenv";
 
-dotenv.config();
+const PORT = 3000;
 
-const PORT = parseInt(process.env.PORT!);
-
-app.listen(PORT, () => console.log(`Server is working: ${PORT}`));
+app.listen(PORT, () => console.log(`Servidor esta rodando: ${PORT}`));

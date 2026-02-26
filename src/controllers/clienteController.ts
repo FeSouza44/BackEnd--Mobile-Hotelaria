@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express"
-import loginRepository from "../repositories/loginRepositories";
+import loginRepository from "../repositories/clienteRepositories";
 import {validatePassword, generatePassword} from "../utils/senha";
 import {createJWT} from "../utils/jwt"
 
