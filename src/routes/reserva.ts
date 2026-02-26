@@ -1,7 +1,8 @@
 import { Router } from "express";
 import reservaController from "../controllers/reserveController";
 
-const routeReserva = Router();
+const rotaReservas = Router();
 
-export default
-routeReserva;
+rotaReservas.post("/", reservaController.criarPedido);
+
+export default rotaReservas;

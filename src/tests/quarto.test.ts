@@ -1,8 +1,8 @@
-const URL_ROOMS: string = "http://localhost:3000/api/room/";
+const URL_ROOMS: string = "http://localhost:3000/api/quartosDisponiveis";
 
 const searchParams = {
-    inicio: "2025-09-24",
-    fim: "2024-09-25",
+    dataInicio: "2025-09-24",
+    datafim: "2024-09-25",
     qtdPessoas: 2
 };
 

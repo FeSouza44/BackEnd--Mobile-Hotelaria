@@ -1,9 +1,9 @@
 import { Router } from "express";
-import loginController from "../controllers/clienteController"
+import clienteController from "../controllers/clienteController";
 
 const rotaLogin = Router();
 
-rotaLogin.post("/", loginController.loginCliente)
-rotaLogin.post("/cadastro", loginController.cadastroCliente)
+rotaLogin.post("/", clienteController.loginCliente)
+rotaLogin.post("/cadastro", clienteController.cadastroCliente)
 
 export default rotaLogin;

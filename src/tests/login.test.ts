@@ -1,38 +1,46 @@
-// const URL_LOGIN:string = "http://localhost:3000/api/client/"
-// const URL_CADASTRO:string = "http://localhost:3000/api/clie/cadastro"
+const url_base:string = "http://localhost:3000/api/login";
+ 
+test("POST / login = 200", async () => {
+    const res = await fetch(url_base, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email: "funcionou@gmail.com",
+            senha: "senhaFuncionou"}
+        )
+    });
+    expect(res.status).toBe(200);
+    const json = await res.json()
+    // console.log(json);
+});
 
-// const novo_login = {
-//   email: "a@gmail.com",
-//   senha: "senha"
-// }
+
+test("POST / login(sem senha) = 400", async () => {
+    const res = await fetch(url_base, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email: "teste@email.com",
+            senha: ""}
+        )
+    });
+    expect(res.status).toBe(400);
+});
 
 
-
-// const novo_cadastro = {
-//   nome: "Fulano de Tal",
-//   cpf: "12345678900",
-//   telefone: "11999999999",
-//   email: "aaaa@gmail.com",
-//   senha: "senha"}
-
-// test("POST: api/login = 201(Create task)", async() => {
-//     const res = await fetch(URL_LOGIN,{
-//         method: "POST",
-//         headers: {"Content-Type": "application/json"},
-//         body: JSON.stringify(novo_login)
-//     }) 
-//     expect(res.status).toBe(201)
-//     const json = await res.json()
-//     console.log(json)
-// })
-
-// test("POST: api/login/cadastro = 201(Create task)", async() => {
-//     const res = await fetch(URL_CADASTRO,{
-//         method: "POST",
-//         headers: {"Content-Type": "application/json"},
-//         body: JSON.stringify(novo_cadastro)
-//     }) 
-//     expect(res.status).toBe(201)
-//     const json = await res.json()
-//     console.log(json)
-// })
+test("POST / create = 200", async () => {
+    const res = await fetch(url_base + "/cadastro" , {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            nome: "Funcionou",
+            email: "funcionou@email.com",
+            senha: "senhaFuncionou",
+            telefone: "157070-7070",
+            cpf:"123456789-55"
+        })
+    });
+    expect(res.status).toBe(200);
+    const token = await res.json();
+    // console.log(token)
+});

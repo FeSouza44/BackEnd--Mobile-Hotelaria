@@ -1,50 +1,53 @@
-import { Request, Response, NextFunction } from "express";
+import {Request, Response, NextFunction} from "express"
+import {corrigirDataHora} from "../utils/dataehora";
 import reserveRepository from "../repositories/reserveRepository";
 
 
-async function createRequest(req: Request, res: Response, next: NextFunction) {
-    const token = req.payload;
-    const {pagamento, quartos} = req.body
+async function criarPedido(req:Request, res:Response, next:NextFunction) {
+    const token = (req as any).payload ;
+    const {pagamento, quartos} = req.body;
 
-    if (!token.id || !pagamento || !quartos) {
-        return res.status(400).json({ message: "Missing required fields" });
+    if (!token.id || !pagamento || !quartos){
+        return res.status(400).json({erro: "Dados incompletos!"})
     }
 
     try {
-
-        const RequestData = {
-            fk_clientes: token.id,
-            pagamento: pagamento
+        const dadosPedido = {
+            cliente_id : token.id,
+            pagamento : pagamento
         }
-
-        const pedidoId = await reserveRepository.createRequests(RequestData);
-        if (!pedidoId) { throw new Error("Erro ao criar pedido");}
-
+        // criar o Pedido
+        const pedidoID = await reserveRepository.createRequests(dadosPedido);
+        if (!pedidoID){throw new Error("Erro ao criar o Pedido")}
+        
+        //criar a reserva para cada um dos quartos
         let result = []
-
-        for (let q of quartos) {
-            const reserveId = await reserveRepository.createReserve(pedidoId, q);
-            if (!reserveId) {continue}
-
+        for (let q of quartos){
+            q.dataInicio = await corrigirDataHora(q.dataInicio, 14)
+            q.dataFim = await corrigirDataHora(q.dataFim, 12)
+            const reservaID = await reserveRepository.createReserve(pedidoID, q)
+            if (!reservaID){continue}
             result.push({
                 ...q,
-                reserveId: reserveId,
-            });
+                reservaID: reservaID,
+            })
         }
 
-        console.log(result);
+        res.status(200).json({
+            message:"Reserva feita com sucesso",
+            pedidoID: pedidoID,
+            reservas: result
+        })
 
-        res.status(201).json({
-            message: "Pedido criado com sucesso",
-            pedidoId: pedidoId 
-        });
 
     } catch (error) {
-        console.error("Error creating reservation:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        console.error(error)
+        return res.status(400).json({erro: "Reserva não efetuada!"})
     }
+
 }
 
-export default {
-    createRequest
+
+export default{
+    criarPedido
 }

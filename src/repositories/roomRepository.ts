@@ -1,56 +1,38 @@
-import {pool} from "../database/database";
-import {Room} from "../models/roomModel";
+import {pool} from "../database/database"
 import { RowDataPacket } from "mysql2";
+import { QuartoReserva, Room } from "../models/roomModel";
 
-async function getAvaibleRooms(inicio: string, fim: string, qtdPessoas: number) {
+async function disponiveis(pedido:QuartoReserva):Promise<Room[]|null>{
     const sql = `
-        SELECT
-            q.id,
-            q.nome,
-            q.numero,
-            q.qtd_cama_casal,
-            q.qtd_cama_solteiro,
-            q.preco,
-            q.disponivel
-        FROM
-            quartos q
-        WHERE
-            q.id NOT IN (
-                SELECT
-                r.fk_quartos
-                FROM
-                reservas r
-                WHERE
-                (r.inicio < ? AND r.fim > ?)
-            )
-        AND 
-            q.disponivel = true
-        AND 
-            ( (q.qtd_cama_casal * 2) + q.qtd_cama_solteiro ) >= ?;
-    `;
+    SELECT q.*,
+            (q.qtd_cama_casal * 2 + q.qtd_cama_solteiro) AS qtd
+            FROM quartos q WHERE q.disponivel = 1
+            AND (q.qtd_cama_casal * 2 + q.qtd_cama_solteiro) >= ?
+            AND q.id NOT IN (
+            SELECT r.quarto_id
+            FROM reservas r
+            WHERE r.fim > ?  
+            AND r.inicio < ?
+        )`;
 
-    const [rows] = await pool.query<Room[]>(sql, [fim, inicio, qtdPessoas])
-    return rows;
+    const [quartos] = await pool.query<Room[]>(sql, [
+        pedido.quantidade,
+        pedido.dataInicio,
+        pedido.dataFim,
+    ])
+    return quartos.length ? quartos : null
 }
 
-async function searchPhotoById(id: number) {
-    const sql = `
-        SELECT 
-            i.nome
-        FROM
-            imagens_quartos iq
-        JOIN
-            imagens i
-        ON
-            iq.fk_imagens = i.id
-        WHERE
-            iq.fk_quartos = ?;
-    `;
+async function buscarFotoPorQuartoId(id:number) {
+    const sql = `SELECT F.nome
+    FROM quartos_fotos QF
+    JOIN fotos F ON  QF.foto_id = F.id
+    WHERE QF.quarto_id = ?`;
 
-    const [fotos] = await pool.query<RowDataPacket[]>(sql, [id]);
-    return fotos.map(foto => foto.nome);
+    const [fotos] = await pool.query<RowDataPacket[]>(sql, [id])
+    return fotos.map(foto=>(foto.nome))
 }
 
-export default {
-    getAvaibleRooms, searchPhotoById
+export default{
+    disponiveis, buscarFotoPorQuartoId
 }
