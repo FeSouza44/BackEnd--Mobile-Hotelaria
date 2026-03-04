@@ -3,8 +3,7 @@ import { RowDataPacket } from "mysql2";
 import { QuartoReserva, Room } from "../models/roomModel";
 
 async function disponiveis(pedido:QuartoReserva):Promise<Room[]|null>{
-    const sql = `
-    SELECT q.*,
+    const sql = `SELECT q.*,
             (q.qtd_cama_casal * 2 + q.qtd_cama_solteiro) AS qtd
             FROM quartos q WHERE q.disponivel = 1
             AND (q.qtd_cama_casal * 2 + q.qtd_cama_solteiro) >= ?
@@ -24,10 +23,11 @@ async function disponiveis(pedido:QuartoReserva):Promise<Room[]|null>{
 }
 
 async function buscarFotoPorQuartoId(id:number) {
-    const sql = `SELECT F.nome
-    FROM quartos_fotos QF
-    JOIN fotos F ON  QF.foto_id = F.id
-    WHERE QF.quarto_id = ?`;
+    const sql = `SELECT fotos.nome 
+    FROM foto_quarto JOIN fotos
+    ON foto_quarto.foto_id = fotos.id 
+    WHERE foto_quarto.quarto_id = ?
+`;
 
     const [fotos] = await pool.query<RowDataPacket[]>(sql, [id])
     return fotos.map(foto=>(foto.nome))

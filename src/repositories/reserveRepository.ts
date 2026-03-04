@@ -2,16 +2,12 @@ import {pool} from "../database/database";
 import {ResultSetHeader} from "mysql2";
 
 async function createRequests(data:any) {
-    const sql = `
-        INSERT INTO
-            pedidos (fk_clientes, pagamento)
-        VALUES
-            (?, ?)
-    `
+    const sql = `INSERT INTO pedidos (cliente_id, pagamento)
+        VALUES (?, ?)`
 
     try {
         const [result]= await pool.query<ResultSetHeader>(sql, [
-            data.fk_clientes,
+            data.cliente_id,
             data.pagamento
         ]);
 
@@ -26,15 +22,14 @@ async function createRequests(data:any) {
 async function createReserve(idReserve:number, room:any) {
     const sql = `
         INSERT INTO 
-            reservas (fim, inicio, fk_pedidos, fk_quartos)
+            reservas (fim, inicio, pedido_id, quarto_id)
         VALUES
-            (?, ?, ?, ?)
-    `
+            (?, ?, ?, ?)`
 
     try {
         const [result]= await pool.query<ResultSetHeader>(sql, [
-            room.dataInicio,
             room.dataFim,
+            room.dataInicio,
             idReserve,
             room.id
         ]);

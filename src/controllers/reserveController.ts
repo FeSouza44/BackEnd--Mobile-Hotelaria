@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from "express"
+import reservaRespository from "../repositories/reserveRepository";
 import {corrigirDataHora} from "../utils/dataehora";
-import reserveRepository from "../repositories/reserveRepository";
 
 
 async function criarPedido(req:Request, res:Response, next:NextFunction) {
@@ -17,7 +17,7 @@ async function criarPedido(req:Request, res:Response, next:NextFunction) {
             pagamento : pagamento
         }
         // criar o Pedido
-        const pedidoID = await reserveRepository.createRequests(dadosPedido);
+        const pedidoID = await reservaRespository.createRequests(dadosPedido);
         if (!pedidoID){throw new Error("Erro ao criar o Pedido")}
         
         //criar a reserva para cada um dos quartos
@@ -25,7 +25,7 @@ async function criarPedido(req:Request, res:Response, next:NextFunction) {
         for (let q of quartos){
             q.dataInicio = await corrigirDataHora(q.dataInicio, 14)
             q.dataFim = await corrigirDataHora(q.dataFim, 12)
-            const reservaID = await reserveRepository.createReserve(pedidoID, q)
+            const reservaID = await reservaRespository.createReserve(pedidoID, q)
             if (!reservaID){continue}
             result.push({
                 ...q,

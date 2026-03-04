@@ -1,32 +1,38 @@
-let Login = {
-    email: "feamaral.comercial@gmail.com",
-    senha: "senha123"
-}
 
-const token = await res.json();
+test("POST: /api/reserva = 200", async()=>{
+    // realizar login
+    const res = await fetch("http://localhost:3000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email: "feamaral@gmail.com",
+            senha: "senha123"}
+        )
+    });
+    expect(res.status).toBe(200);
+    const token = await res.json()
 
-test("POST: /api/reserva = 200", async()=> {
-    const res = await fetch("http:localhost:3000/api/reserva", {
-    method: "POST",
-    headers: {"Content-type" : "application/json", "Authorization": "Bearer" + token},
-    body: JSON.stringify( {
-        pagamento:"pix",
-        quartos:
-         [ {    
-            id: 1,
-            dataInicio: "07/02/2026",
-            dataFim: "10/02/2026",
-            },
-            {    
-            id: 12,
-            dataInicio: "10/02/2026",
-            dataFim: "13/02/2026",
-            },
-        ]
-            })     
 
-        }
+    //realizar reserva
+    const resp = await fetch("http://localhost:3000/api/reserva",{
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "+ token
+        },
+        body: JSON.stringify({
+            pagamento: "pix",
+            quartos: [
+                {
+                    id: 1,
+                    dataInicio: "2026/03/04",
+                    dataFim: "2026/03/30",
+                }            
+            ]
+        })
 
-    )
-}
-)
+    });
+    expect(resp.status).toBe(200);
+    const json = await resp.json()
+    // console.log(json)
+})
