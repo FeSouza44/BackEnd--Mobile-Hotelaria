@@ -156,7 +156,7 @@ CREATE TABLE `pedidos` (
   `id` int(11) NOT NULL,
   `usuario_id` int(11) DEFAULT NULL,
   `cliente_id` int(11) DEFAULT NULL,
-  `data` timestamp NOT NULL DEFAULT current_timestamp(),
+  `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `pagamento` enum('Cartão','Dinheiro','Pix') DEFAULT 'Cartão'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
