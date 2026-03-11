@@ -15,10 +15,10 @@ test("POST: api/rooms/available = 200", async () => {
 
     expect(res.status).toBe(200);
     const json = await res.json();
-    // console.log("Quartos disponíveis encontrados:");
-    // console.log(json);
-    // expect(Array.isArray(json)).toBe(true);
-    // if (json.length > 0) {
-    //     expect(json[0]).toHaveProperty("id");
-    // }
+    console.log("Quartos disponíveis encontrados:");
+    console.log(json);
+    expect(Array.isArray(json)).toBe(true);
+    if (json.length > 0) {
+        expect(json[0]).toHaveProperty("id");
+    }
 });

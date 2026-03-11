@@ -1,7 +1,8 @@
+const url_consult = "http://localhost:3000/api"
 
 test("POST: /api/reserva = 200", async()=>{
     // realizar login
-    const res = await fetch("http://localhost:3000/api/login", {
+    const res = await fetch(url_consult + "/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -14,7 +15,7 @@ test("POST: /api/reserva = 200", async()=>{
 
 
     //realizar reserva
-    const resp = await fetch("http://localhost:3000/api/reserva",{
+    const resp = await fetch(url_consult + "/reserva",{
         method: "POST",
         headers: { 
             "Content-Type": "application/json",
