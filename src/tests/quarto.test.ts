@@ -1,4 +1,4 @@
-const URL_ROOMS: string = "http://localhost:3000/api/quartosDisponiveis";
+const URL_ROOMS: string = "https://back-end-mobile-hotelaria.vercel.app/api/quartosDisponiveis";
 
 const searchParams = {
     dataInicio: "2025-09-24",

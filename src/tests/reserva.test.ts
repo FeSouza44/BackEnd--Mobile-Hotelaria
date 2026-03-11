@@ -1,4 +1,4 @@
-const url_consult = "http://localhost:3000/api"
+const url_consult = "https://back-end-mobile-hotelaria.vercel.app/api"
 
 test("POST: /api/reserva = 200", async()=>{
     // realizar login
